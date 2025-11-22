@@ -1,4 +1,4 @@
-# ZIP Module Walkthrough
+# ZIP Module
 I have implemented a basic ZIP module for Mini Micro using the RawData class. This module allows you to create ZIP archives containing files with "Store" compression (no compression).
 
 ## Changes
