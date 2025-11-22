@@ -1,5 +1,4 @@
-import "lib/zip"
-zip = globals["lib/zip"]
+import "zip"
 
 z = zip.ZipWriter.make
 
