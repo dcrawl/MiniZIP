@@ -6,23 +6,23 @@ z = zip.ZipWriter.make
 // Function to recursively add files
 addDirectory = function(dirPath)
 	print "Processing: " + dirPath
-	
+
 	// Ensure directory entry exists in zip (optional, but good practice)
 	// If dirPath is "assets", we want "assets/" in zip
 	if dirPath[-1] != "/" then zipPath = dirPath + "/" else zipPath = dirPath
 	z.add zipPath, ""
-	
+
 	for child in file.children(dirPath)
 		if child == ".DS_Store" then continue // Skip system files
-		
+
 		fullPath = dirPath + "/" + child
 		info = file.info(fullPath)
-		
+
 		if info == null then
 			print "Warning: Could not get info for " + fullPath
 			continue
 		end if
-		
+
 		if info.isDirectory then
 			addDirectory fullPath
 		else
