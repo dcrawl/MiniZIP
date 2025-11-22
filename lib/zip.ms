@@ -20,6 +20,7 @@ end for
 
 crc32 = function(data)
 	crc = 4294967295 // 0xFFFFFFFF
+	if data.len == 0 then return 0
 	if data isa string then
 		for i in range(0, data.len - 1)
 			idx = bitAnd(bitXor(crc, data[i].code), 255)
@@ -53,6 +54,7 @@ end function
 // Helper to append RawData to another RawData
 RawData.append = function(otherData)
 	oldLen = self.len
+	if otherData.len == 0 then return
 	self.resize oldLen + otherData.len
 	for i in range(0, otherData.len - 1)
 		self.setByte oldLen + i, otherData.byte(i)
@@ -62,6 +64,7 @@ end function
 // Helper to append string as bytes
 RawData.appendString = function(str)
 	oldLen = self.len
+	if str.len == 0 then return
 	self.resize oldLen + str.len
 	for i in range(0, str.len - 1)
 		self.setByte oldLen + i, str[i].code
@@ -150,7 +153,10 @@ ZipWriter.save = function(path)
 		cdHeader.writeLE 32, 0, 2       // File comment length
 		cdHeader.writeLE 34, 0, 2       // Disk number start
 		cdHeader.writeLE 36, 0, 2       // Internal file attributes
-		cdHeader.writeLE 38, 32, 4       // External file attributes (0x20 = Archive)
+		// External file attributes
+		extAttr = 32 // 0x20 Archive
+		if f.filename.len > 0 and f.filename[-1] == "/" then extAttr = 16 // 0x10 Directory
+		cdHeader.writeLE 38, extAttr, 4
 		cdHeader.writeLE 42, f.offset, 4 // Relative offset of local header
 		
 		self.data.append cdHeader
